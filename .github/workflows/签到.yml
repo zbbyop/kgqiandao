@@ -55,3 +55,32 @@ jobs:
           MAIL_USER: ${{ secrets.MAIL_USER }}
           MAIL_PASS: ${{ secrets.MAIL_PASS }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
+
+  cleanup:
+    runs-on: ubuntu-22.04
+    needs: run  # 修正了依赖的作业名称
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.9.19'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Cleanup old workflow runs
+        env:
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}  # 使用你设置的 token
+        run: |
+          python cleanup.py
+
+      - name: Cleanup old workflow runs
+        env:
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}  # 使用你设置的 token
+        run: |
+          python cleanup.py
